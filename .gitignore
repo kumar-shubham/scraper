@@ -1,0 +1,11 @@
+target/
+.classpath
+.project
+.factorypath
+velocity.log
+.settings/
+.apt_generated/
+src/main/resources/rebel.xml
+package-lock.json
+.DS_Store
+
