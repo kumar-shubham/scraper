@@ -83,18 +83,15 @@ public class AmazonSearch {
 			
 			String detailXPath = ".//div[@class = 'a-fixed-left-grid-col a-col-right']";
 			WebElement detailMain = productEle.findElement(By.xpath(detailXPath));
-			
 			WebElement nameEle = detailMain.findElement(By.cssSelector("div.a-row div a h2")); 
-			WebElement sellerEle = detailMain.findElement(By.cssSelector("div.a-row div span"));  
-			
-			System.out.println(sherlock.getOuterHTML(sellerEle));
 			String name = nameEle.getAttribute("data-attribute");
-			String seller = sellerEle.getText();
 			
-			System.out.println(name + ", By " + seller);
+			HashMap<String, String> product = new HashMap<String, String>();
+			product.put("name", name);
+			productList.add(product);
+			System.out.println(name);
 		}
-		
-		return null;
+		return productList;
 	}
 	
 	public boolean exit() {
