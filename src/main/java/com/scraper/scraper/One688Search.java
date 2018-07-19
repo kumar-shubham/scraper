@@ -105,12 +105,15 @@ public class One688Search {
 	public List<HashMap<String, String>> getSearchResults(){
 		List<HashMap<String, String>> productList = new ArrayList<>();
 		
-		List<WebElement> productEles = sherlock.findElementsByXPath("//li[contains(@id, 'result_')]");
+		List<WebElement> productEles = sherlock.findElementsByCSSSelector("#sm-syncextendoffer li");
 		System.out.println("total products found on the page => " + productEles.size());
 		
 		for(WebElement productEle : productEles) {
-			String imageXpath = ".//div[@class = 'a-fixed-left-grid-col a-col-left']";
-			WebElement imageMain = productEle.findElement(By.xpath(imageXpath));
+			String imageCSSPath = "div.imgofferresult-mainBlock div.sm-offer-photo a img";
+			WebElement imageEle = productEle.findElement(By.cssSelector(imageCSSPath));
+			String imageURL = imageEle.getAttribute("src");
+			
+			System.out.println("image url => " + imageURL);
 			
 			String detailXPath = ".//div[@class = 'a-fixed-left-grid-col a-col-right']";
 			WebElement detailMain = productEle.findElement(By.xpath(detailXPath));
