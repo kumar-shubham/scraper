@@ -1,6 +1,6 @@
 package com.scraper.service;
 
-import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scraper.scraper.AmazonSearch;
+import com.scraper.scraper.One688Search;
 import com.scraper.util.IQHttpClient;
 import com.scraper.util.InstanceFactory;
 import com.scraper.util.Watson;
@@ -19,19 +20,27 @@ import com.scraper.util.Watson;
 public class ScraperService {
 	
 	public void getAmazonSearchResuts() throws Exception {
-		String url = "https://www.amazon.com/";
+		String amazonUrl = "https://www.amazon.com/";
+		String one688Url = "https://www.1688.com/";
 		String searchPhrase = "IPhone 8";
 		
 		AmazonSearch amazonSearch = (AmazonSearch) InstanceFactory.getInstance("AmazonSearch");	
 		
 		amazonSearch.initialize();
-		amazonSearch.openURL(url);
+		amazonSearch.openURL(amazonUrl);
 		amazonSearch.search(searchPhrase);
 		List<HashMap<String, String>> productList = amazonSearch.getSearchResults(); 
 		List<String> productNames = getTranslatedProductNames(productList);
 		System.out.println(productNames);
 		Watson.sleep(10);
-//		amazonSearch.exit();
+		amazonSearch.exit();
+		
+		One688Search one688Search = (One688Search) InstanceFactory.getInstance("One688Search");
+		one688Search.initialize();
+		one688Search.openURL(one688Url);
+		one688Search.closePopups();
+		one688Search.search(productNames.get(0));
+		one688Search.closePopups();
 	}
 	
 	public List<String> getTranslatedProductNames(List<HashMap<String, String>> productList) throws Exception{
@@ -42,7 +51,7 @@ public class ScraperService {
 			productNames.add(name);
 		}
 		
-		return translateText(productNames, "en", "zh-CN");
+		return translateText(productNames, "en", "zh-TW");
 	}
 	
 	public String translateText(String text, String fromLangCode, String toLangCode) throws Exception {
@@ -52,25 +61,21 @@ public class ScraperService {
 	public List<String> translateText(List<String> texts, String fromLangCode, String toLangCode) throws Exception {
 		 
 		String url1 = "https://translation.googleapis.com/language/translate/v2?";
-		String url2 = "&target=hi&source=en&key=AIzaSyBbEzhRYeRSrThhLMiuCQVeqyLUiHOZtho";
+		String url2 = "&target=" + toLangCode + "&source=" + fromLangCode + "&key=AIzaSyBbEzhRYeRSrThhLMiuCQVeqyLUiHOZtho";
 		
 		String mainText = "";
 		for(int i = 0; i<texts.size(); i++) {
 			String text = texts.get(i);
-			String[] textArr = text.split(" ");
-			text = "";
-			int j = 0;
-			for(j = 0; j< textArr.length-1; j++) {
-				text += textArr[j] + "%20"; 
-			}
-			text += textArr[j];
+			text = URLEncoder.encode(text, "UTF-8");
 			if(i > 0) {
-				mainText = "&q=" + text;
+				mainText += "&q=" + text;
 			}else {
 				mainText = "q=" + text;
 			}
 		}
 		String url = url1 + mainText + url2;
+		
+		System.out.println("new URL => " + url);
 		
 		IQHttpClient client = new IQHttpClient(url, IQHttpClient.REQUEST_TYPE_GET); 
 		String result = client.getResponseForGetRequest();

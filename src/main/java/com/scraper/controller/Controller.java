@@ -1,15 +1,16 @@
 package com.scraper.controller;
 
-import org.apache.http.HttpRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scraper.service.ScraperService;
-import com.scraper.util.ScriptLogger;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600000)
@@ -41,6 +42,14 @@ public class Controller {
 		System.out.println("translateText Api called...");
 		System.out.println("text to translate => " + text);
 		return scraperService.translateText(text, "en", "hi");
+	}
+	
+	@RequestMapping(value = "/translateTexts", method = RequestMethod.GET)
+	public List<String> translateText() throws Exception {
+		System.out.println("translateText Api called...");
+		List<String> texts = Arrays.asList("my name is khan", "your name is khan");
+		System.out.println("text to translate => " + texts);
+		return scraperService.translateText(texts, "en", "hi");
 	}
 	
 	
