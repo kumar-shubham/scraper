@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,10 +15,12 @@ import com.scraper.scraper.AmazonSearch;
 import com.scraper.scraper.One688Search;
 import com.scraper.util.IQHttpClient;
 import com.scraper.util.InstanceFactory;
-import com.scraper.util.Watson;
 
 @Service
 public class ScraperService {
+	
+	@Autowired
+	XLSXGenerator xlsxGenerator;
 	
 	public void getAmazonSearchResuts() throws Exception {
 		String amazonUrl = "https://www.amazon.com/";
@@ -34,14 +37,20 @@ public class ScraperService {
 		System.out.println(productNames);
 		amazonSearch.exit();
 		
+		List<HashMap<String, String>> productList1688 = new ArrayList<>();
+		
 		One688Search one688Search = (One688Search) InstanceFactory.getInstance("One688Search");
 		one688Search.initialize();
-		one688Search.openURL(one688Url);
-		one688Search.closePopups();
-		one688Search.search(productNames.get(0));
-		one688Search.closePopups();
-		List<HashMap<String, String>> productList1688 = one688Search.getSearchResults();
-		System.out.println(productList1688);
+		
+		for(String productName : productNames) {
+			one688Search.openURL(one688Url);
+			one688Search.closePopups();
+			one688Search.search(productName);
+			one688Search.closePopups();
+			productList1688.addAll(one688Search.getSearchResults());
+		}
+		String filepath = xlsxGenerator.generateXLSX(productList1688);
+		System.out.println("file path => " + filepath);
 	}
 	
 	public List<String> getTranslatedProductNames(List<HashMap<String, String>> productList) throws Exception{

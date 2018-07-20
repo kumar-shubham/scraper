@@ -115,6 +115,9 @@ public class One688Search {
 			
 			System.out.println("image url => " + imageURL);
 			
+			WebElement productURLEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-photo a"));
+			String productURL = productURLEle.getAttribute("href");
+			
 			WebElement priceEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-price span"));
 			String price = priceEle.getText();
 			
@@ -128,11 +131,13 @@ public class One688Search {
 			String location = locationEle.getAttribute("title");
 			
 			HashMap<String, String> product = new HashMap<String, String>();
-			product.put("name", name);
-			product.put("price", price);
-			product.put("image", imageURL);
-			product.put("seller", seller);
-			product.put("location", location);
+			product.put("Search Phrase", searchPhrase);
+			product.put("Product Name", name);
+			product.put("Price", price);
+			product.put("Image", imageURL);
+			product.put("Seller", seller);
+			product.put("Location", location);
+			product.put("URL", productURL);
 			productList.add(product);
 		}
 		return productList;
