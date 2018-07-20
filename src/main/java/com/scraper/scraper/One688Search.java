@@ -105,7 +105,7 @@ public class One688Search {
 	public List<HashMap<String, String>> getSearchResults(){
 		List<HashMap<String, String>> productList = new ArrayList<>();
 		
-		List<WebElement> productEles = sherlock.findElementsByCSSSelector("ul#sm-offer-list li");
+		List<WebElement> productEles = sherlock.findElementsByCSSSelector("ul#sm-offer-list > li");
 		System.out.println("total products found on the page => " + productEles.size());
 		
 		for(WebElement productEle : productEles) {
@@ -127,8 +127,13 @@ public class One688Search {
 			WebElement sellerEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-company > a"));
 			String seller = sellerEle.getAttribute("title");
 			
-			WebElement locationEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-sub div.sm-offer-location"));
-			String location = locationEle.getAttribute("title");
+			String location = null;
+			try {
+				WebElement locationEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-sub div.sm-offer-location"));
+				location = locationEle.getAttribute("title");
+			}catch(Exception e) {
+				System.out.println("location not found");
+			}
 			
 			HashMap<String, String> product = new HashMap<String, String>();
 			product.put("Search Phrase", searchPhrase);
