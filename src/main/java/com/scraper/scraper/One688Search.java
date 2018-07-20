@@ -105,7 +105,7 @@ public class One688Search {
 	public List<HashMap<String, String>> getSearchResults(){
 		List<HashMap<String, String>> productList = new ArrayList<>();
 		
-		List<WebElement> productEles = sherlock.findElementsByCSSSelector("#sm-syncextendoffer li");
+		List<WebElement> productEles = sherlock.findElementsByCSSSelector("ul#sm-offer-list li");
 		System.out.println("total products found on the page => " + productEles.size());
 		
 		for(WebElement productEle : productEles) {
@@ -115,15 +115,25 @@ public class One688Search {
 			
 			System.out.println("image url => " + imageURL);
 			
-			String detailXPath = ".//div[@class = 'a-fixed-left-grid-col a-col-right']";
-			WebElement detailMain = productEle.findElement(By.xpath(detailXPath));
-			WebElement nameEle = detailMain.findElement(By.cssSelector("div.a-row div a h2")); 
-			String name = nameEle.getAttribute("data-attribute");
+			WebElement priceEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-price span"));
+			String price = priceEle.getText();
+			
+			WebElement nameEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-title > a"));
+			String name = nameEle.getAttribute("title");
+			
+			WebElement sellerEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-company > a"));
+			String seller = sellerEle.getAttribute("title");
+			
+			WebElement locationEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-sub div.sm-offer-location"));
+			String location = locationEle.getAttribute("title");
 			
 			HashMap<String, String> product = new HashMap<String, String>();
 			product.put("name", name);
+			product.put("price", price);
+			product.put("image", imageURL);
+			product.put("seller", seller);
+			product.put("location", location);
 			productList.add(product);
-			System.out.println(name);
 		}
 		return productList;
 	}

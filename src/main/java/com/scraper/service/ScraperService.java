@@ -32,7 +32,6 @@ public class ScraperService {
 		List<HashMap<String, String>> productList = amazonSearch.getSearchResults(); 
 		List<String> productNames = getTranslatedProductNames(productList);
 		System.out.println(productNames);
-		Watson.sleep(10);
 		amazonSearch.exit();
 		
 		One688Search one688Search = (One688Search) InstanceFactory.getInstance("One688Search");
@@ -41,6 +40,8 @@ public class ScraperService {
 		one688Search.closePopups();
 		one688Search.search(productNames.get(0));
 		one688Search.closePopups();
+		List<HashMap<String, String>> productList1688 = one688Search.getSearchResults();
+		System.out.println(productList1688);
 	}
 	
 	public List<String> getTranslatedProductNames(List<HashMap<String, String>> productList) throws Exception{
