@@ -42,6 +42,19 @@ public class Controller {
 		return scraperService.getAmazonSearchResuts(text);
 	}
 	
+	@RequestMapping(value = "/search1688", method = RequestMethod.GET)
+	public String search1688(String text, String key) throws Exception {
+
+		System.out.println("search1688 Api called...");
+		if(!"93nfii29sjwd0".equals(key)) {
+			return "invalid request";
+		}
+		if(StringUtils.isEmpty(text)) {
+			return "search text is null";
+		}
+		return scraperService.get1688SearchResuts(text);
+	}
+	
 	@RequestMapping(value = "/translateText", method = RequestMethod.GET)
 	public String translateText(String text) throws Exception {
 		System.out.println("translateText Api called...");

@@ -54,7 +54,7 @@ public class ScraperService {
 			}
 		
 		try {
-//			one688Search.exit();
+			one688Search.exit();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -65,6 +65,47 @@ public class ScraperService {
 		
 		return getResourceURL(filepath);
 	}
+	
+	
+	public String get1688SearchResuts(String searchPhrase) throws Exception {
+		String one688Url = "https://www.1688.com/";
+		
+		String translatedText = translateText(searchPhrase, "en", "zh-TW");
+		
+		List<String> productNames = Arrays.asList(translatedText);
+		System.out.println(productNames);
+		
+		List<HashMap<String, String>> productList1688 = new ArrayList<>();
+		
+		One688Search one688Search = (One688Search) InstanceFactory.getInstance("One688Search");
+		one688Search.initialize();
+		
+		try {
+			for(String productName : productNames) {
+				one688Search.openURL(one688Url);
+				one688Search.closePopups();
+				one688Search.search(productName);
+				one688Search.closePopups();
+				productList1688.addAll(one688Search.getSearchResults());
+			}
+		}catch(Exception e) {
+				e.printStackTrace();
+			}
+		
+		try {
+			one688Search.exit();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("total products scraped => " + productList1688.size());
+		String filepath = xlsxGenerator.generateXLSX(productList1688);
+		System.out.println("file path => " + filepath);
+		
+		return getResourceURL(filepath);
+	}
+	
+	
 	
 	public List<String> getTranslatedProductNames(List<HashMap<String, String>> productList) throws Exception{
 		List<String> productNames = new ArrayList<>();

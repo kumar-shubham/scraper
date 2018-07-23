@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.scraper.util.ScriptLogger;
 import com.scraper.util.Sherlock;
 import com.scraper.util.Watson;
 
@@ -106,9 +107,16 @@ public class One688Search {
 		List<WebElement> productEles = sherlock.findElementsByCSSSelector("ul#sm-offer-list > li");
 		System.out.println("total products found on the page => " + productEles.size());
 		
+		sherlock.setImplicitwait(1);
 		for(WebElement productEle : productEles) {
 			String imageCSSPath = "div.imgofferresult-mainBlock div.sm-offer-photo a img";
-			WebElement imageEle = productEle.findElement(By.cssSelector(imageCSSPath));
+			WebElement imageEle = null;
+			try {
+				imageEle = productEle.findElement(By.cssSelector(imageCSSPath));
+			}catch(Exception e) {
+				ScriptLogger.writeError("error in getting image", e);
+				continue;
+			}
 			String imageURL = imageEle.getAttribute("src");
 			
 			System.out.println("image url => " + imageURL);
@@ -163,6 +171,7 @@ public class One688Search {
 			product.put("URL", productURL);
 			productList.add(product);
 		}
+		sherlock.setImplicitwait(10);	
 		return productList;
 	}
 	
