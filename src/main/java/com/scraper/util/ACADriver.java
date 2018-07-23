@@ -2,6 +2,7 @@ package com.scraper.util;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Hashtable;
@@ -13,6 +14,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -70,10 +72,14 @@ public class ACADriver {
 			options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 			options.setCapability(ChromeOptions.CAPABILITY, options);
 			options.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
+			
+			URL url = new URL("http://localhost:8088/wd/hub/");
 
-			driver = new ChromeDriver(options);
+			driver = new RemoteWebDriver(url, options);
+			
+//			driver = new ChromeDriver(options);
 
-			 driver.manage().window().maximize();
+//			 driver.manage().window().maximize();
 			setDriverTimeout(10);
 		}
 		return driver;

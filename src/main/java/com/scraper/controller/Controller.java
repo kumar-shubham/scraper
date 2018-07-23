@@ -1,9 +1,9 @@
 package com.scraper.controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,11 +30,16 @@ public class Controller {
 	
 
 	@RequestMapping(value = "/searchAmazon", method = RequestMethod.GET)
-	public String searchAmazon() throws Exception {
+	public String searchAmazon(String text, String key) throws Exception {
 
 		System.out.println("searchAmazon Api called...");
-		scraperService.getAmazonSearchResuts();
-		return "Search completed";
+		if(!"93nfii29sjwd0".equals(key)) {
+			return "invalid request";
+		}
+		if(StringUtils.isEmpty(text)) {
+			return "search text is null";
+		}
+		return scraperService.getAmazonSearchResuts(text);
 	}
 	
 	@RequestMapping(value = "/translateText", method = RequestMethod.GET)

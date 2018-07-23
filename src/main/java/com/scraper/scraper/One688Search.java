@@ -47,7 +47,7 @@ public class One688Search {
 	
 	public boolean closePopups() {
 		try {
-			if(Watson.checkIfElementPresentOnThePage(sherlock, By.cssSelector("div.home-identity-dialog"))) {
+			if(Watson.checkIfElementPresentOnThePage(sherlock, By.cssSelector("div.home-identity-dialog"), false)) {
 				WebElement popup = sherlock.findElementByCSSSelector("div.home-identity-dialog");
 				System.out.println("pop up is present");
 				if(popup.isDisplayed()) {
@@ -55,9 +55,8 @@ public class One688Search {
 					WebElement closeBtn = sherlock.findElementByCSSSelector("span.identity-close");
 					closeBtn.click();
 					System.out.println("pop closed");
-					Watson.sleep(2);
 				}
-			}else if(Watson.checkIfElementPresentOnThePage(sherlock, By.id("s-module-overlay"))) {
+			}else if(Watson.checkIfElementPresentOnThePage(sherlock, By.id("s-module-overlay"), false)) {
 				WebElement popup = sherlock.findElementById("s-module-overlay");
 				System.out.println("pop up is present");
 				if(popup.isDisplayed()) {
@@ -65,7 +64,6 @@ public class One688Search {
 					WebElement closeBtn = sherlock.findElementByCSSSelector("div.s-overlay-close");
 					closeBtn.click();
 					System.out.println("pop closed");
-					Watson.sleep(2);
 				}
 			}
 			return true;
@@ -115,17 +113,37 @@ public class One688Search {
 			
 			System.out.println("image url => " + imageURL);
 			
-			WebElement productURLEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-photo a"));
-			String productURL = productURLEle.getAttribute("href");
+			String productURL = null;
+			try {
+				WebElement productURLEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-photo a"));
+				productURL = productURLEle.getAttribute("href");
+			}catch(Exception e) {
+				System.out.println("product url not found");
+			}
 			
-			WebElement priceEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-price span"));
-			String price = priceEle.getText();
+			String price = null;
+			try {
+				WebElement priceEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-price span"));
+				price = priceEle.getText();
+			}catch(Exception e) {
+				System.out.println("price not found");
+			}
 			
-			WebElement nameEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-title > a"));
-			String name = nameEle.getAttribute("title");
+			String name = null;
+			try {
+				WebElement nameEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-title > a"));
+				name = nameEle.getAttribute("title");
+			}catch(Exception e) {
+				System.out.println("name not found");
+			}
 			
-			WebElement sellerEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-company > a"));
-			String seller = sellerEle.getAttribute("title");
+			String seller = null;
+			try {
+				WebElement sellerEle = productEle.findElement(By.cssSelector("div.imgofferresult-mainBlock div.sm-offer-company > a"));
+				seller = sellerEle.getAttribute("title");
+			}catch(Exception e) {
+				System.out.println("seller not found");
+			}
 			
 			String location = null;
 			try {

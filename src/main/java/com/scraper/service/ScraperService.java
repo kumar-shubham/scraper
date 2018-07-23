@@ -22,10 +22,9 @@ public class ScraperService {
 	@Autowired
 	XLSXGenerator xlsxGenerator;
 	
-	public void getAmazonSearchResuts() throws Exception {
+	public String getAmazonSearchResuts(String searchPhrase) throws Exception {
 		String amazonUrl = "https://www.amazon.com/";
 		String one688Url = "https://www.1688.com/";
-		String searchPhrase = "IPhone 8";
 		
 		AmazonSearch amazonSearch = (AmazonSearch) InstanceFactory.getInstance("AmazonSearch");	
 		
@@ -54,9 +53,17 @@ public class ScraperService {
 				e.printStackTrace();
 			}
 		
+		try {
+//			one688Search.exit();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		System.out.println("total products scraped => " + productList1688.size());
 		String filepath = xlsxGenerator.generateXLSX(productList1688);
 		System.out.println("file path => " + filepath);
+		
+		return getResourceURL(filepath);
 	}
 	
 	public List<String> getTranslatedProductNames(List<HashMap<String, String>> productList) throws Exception{
@@ -70,11 +77,11 @@ public class ScraperService {
 		return translateText(productNames, "en", "zh-TW");
 	}
 	
-	public String translateText(String text, String fromLangCode, String toLangCode) throws Exception {
+	public static String translateText(String text, String fromLangCode, String toLangCode) throws Exception {
 		return translateText(new ArrayList<>(Arrays.asList(text)), fromLangCode, toLangCode).get(0);
 	}
 	
-	public List<String> translateText(List<String> texts, String fromLangCode, String toLangCode) throws Exception {
+	public static List<String> translateText(List<String> texts, String fromLangCode, String toLangCode) throws Exception {
 		 
 		String url1 = "https://translation.googleapis.com/language/translate/v2?";
 		String url2 = "&target=" + toLangCode + "&source=" + fromLangCode + "&key=AIzaSyBbEzhRYeRSrThhLMiuCQVeqyLUiHOZtho";
@@ -111,7 +118,15 @@ public class ScraperService {
 			response.add(newText);
 		}
 		return response;
+	}
+	
+	private String getResourceURL(String path) {
+		String serverURL = "http://18.222.208.156/";
 		
+		if(path.contains("/public/")) {
+			path = path.substring(path.indexOf("/public/")+8);
+		}
+		return serverURL + path;
 	}
 
 }
