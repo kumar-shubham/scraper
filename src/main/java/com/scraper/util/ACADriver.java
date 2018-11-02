@@ -75,11 +75,11 @@ public class ACADriver {
 			
 			URL url = new URL("http://localhost:8088/wd/hub/");
 
-			driver = new RemoteWebDriver(url, options);
+//			driver = new RemoteWebDriver(url, options);
 			
-//			driver = new ChromeDriver(options);
+			driver = new ChromeDriver(options);
 
-//			 driver.manage().window().maximize();
+			 driver.manage().window().maximize();
 			setDriverTimeout(10);
 		}
 		return driver;

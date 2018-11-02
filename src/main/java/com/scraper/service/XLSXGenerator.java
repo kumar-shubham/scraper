@@ -98,5 +98,67 @@ public class XLSXGenerator {
 		
 		return filepath.toString();
 	}
+	
+	public String generateXLSX(List<HashMap<String, String>> productList, String sheetName, HashMap<String, Integer> headerMap) throws Exception {
+		
+		String dateStr = new Date().toString().replace(" ", "");
+		String randomString = RandomStringUtils.randomAlphanumeric(8);
+		Path filepath = Paths.get(System.getProperty("user.home"), "public", "temp" + dateStr + randomString + ".xlsx");
+		
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet1 = workbook.createSheet(sheetName);
+
+		XSSFCellStyle cs = workbook.createCellStyle();
+		cs.setFillForegroundColor(new XSSFColor(new java.awt.Color(201, 204, 181)));
+		cs.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		XSSFFont font = workbook.createFont();
+		font.setFontHeightInPoints((short) 14);
+		font.setBold(true);
+		cs.setFont(font);
+		
+		Row headerRow1 = sheet1.createRow(0);
+		
+		for(String header : headerMap.keySet()) {
+			String headerString = header;
+			Cell cell1 = headerRow1.createCell(headerMap.get(header));
+			cell1.setCellValue(headerString);
+			cell1.setCellStyle(cs);
+		}
+		
+		int rowNum = 1;
+		
+		for(HashMap<String, String> product : productList) {
+			Row row1 = sheet1.createRow(rowNum++);
+			Set<String> keys = product.keySet();
+			
+			for(String key : keys) {
+				if(!headerMap.containsKey(key)) {
+					continue;
+				}
+				Cell cell1 = row1.createCell(headerMap.get(key));
+				cell1.setCellValue(product.get(key));
+			}
+		}
+		
+		for (int i = 0; i < 15; i++) {
+			sheet1.autoSizeColumn(i);
+		}
+		
+		try {
+			FileOutputStream outputStream = new FileOutputStream(filepath.toFile());
+			workbook.write(outputStream);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			workbook.close();
+		}
+		
+		System.out.println("saved to path => " + filepath.toString());
+		
+		return filepath.toString();
+	}
 
 }

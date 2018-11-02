@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scraper.service.ScraperService;
+import com.scraper.service.ScraperService1;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600000)
@@ -20,6 +21,9 @@ public class Controller {
 	
 	@Autowired
 	ScraperService scraperService;
+	
+	@Autowired
+	ScraperService1 scraperService1;
 	
 	@RequestMapping(value = "/hello", method = RequestMethod.GET)
 	public String addRolePrivilege() throws Exception {
@@ -53,6 +57,17 @@ public class Controller {
 			return "search text is null";
 		}
 		return scraperService.get1688SearchResuts(text);
+	}
+	
+	@RequestMapping(value = "/scrapeFIX", method = RequestMethod.GET)
+	public String scrapeFIX(String text, String key) throws Exception {
+
+		System.out.println("scrapeFIX Api called...");
+		if(!"93nfii29sjwd0".equals(key)) {
+			return "invalid request";
+		}
+		
+		return scraperService1.getFixScrapedResults();
 	}
 	
 	@RequestMapping(value = "/translateText", method = RequestMethod.GET)
