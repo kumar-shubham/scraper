@@ -125,7 +125,7 @@ public class ScraperService {
 	public static List<String> translateText(List<String> texts, String fromLangCode, String toLangCode) throws Exception {
 		 
 		String url1 = "https://translation.googleapis.com/language/translate/v2?";
-		String url2 = "&target=" + toLangCode + "&source=" + fromLangCode + "&key=AIzaSyBbEzhRYeRSrThhLMiuCQVeqyLUiHOZtho";
+		String url2 = "&target=" + toLangCode + "&source=" + fromLangCode + "&key=";
 		
 		String mainText = "";
 		for(int i = 0; i<texts.size(); i++) {
